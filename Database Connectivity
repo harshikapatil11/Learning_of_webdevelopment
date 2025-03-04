@@ -1,0 +1,148 @@
+code	<?php include "./config.php" ?>
+
+<!-- Insert data  -->
+<?php 
+    if((isset($_POST['submit'])))
+    {   
+        
+        $username= $_POST['username'];
+        $email= $_POST['email'];
+        $password= $_POST['password'];
+        $cpassword= $_POST['cpassword'];
+		
+
+        $query = "INSERT INTO employee1(username,email,password,cpassword) VALUE('$username','$email','$password','$cpassword')";
+        
+        $fire = mysqli_query($con,$query) or die("cannot insert data into database. ".mysqli_error($con));
+
+        //if ($fire) echo "Data Submitted to Database."
+
+        if ($fire) echo "Data Submitted to Database.";
+
+    
+    }
+?>    
+
+<!-- Delete data -->
+<?php
+    if (isset($_GET['del']))
+    {
+        $email = $_GET['del'];
+        $query = "DELETE FROM employee1 WHERE id = $email";
+        $fire = mysqli_query($con,$query) or die ("cannot delete data from database. ".mysqli_error($con));
+        if ($fire) {
+			echo "Data Deleted from Database.";
+			
+		}
+    }
+
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eato</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body>
+
+
+    <div class="container">
+    <div class="row">
+    <div class="col-lg-8">
+    <!-- show data here -->
+    <div class="col-lg-8">
+
+    <h7>Employee Data </h7>
+    
+    <br>
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>FULLNAME</th>
+        <th>LOCATION</th>
+        <th>DESIGNATION</th>
+		<th>CONTACT NO</th>
+		<th>id</th>
+		
+      </tr>
+    </thead>
+    <tbody>
+    <?php 
+
+        $query = "SELECT * FROM employee1";
+        $fire = mysqli_query($con,$query) or die("can not fetch data from database. ".mysqli_error($con));
+
+        //if ($fire) echo "We got the data from database.";
+        if (mysqli_num_rows($fire)>0)
+        {
+
+                while($employee1 = mysqli_fetch_assoc($fire)){ ?>
+                
+                    <tr>
+
+                    <td><?php echo $employee1['username'] ?> </td>
+                        <td><?php echo $employee1['email'] ?> </td>
+                        <td><?php echo $employee1['password'] ?> </td>
+                        <td><?php echo $employee1['cpassword'] ?> </td>
+                        <td>
+                            <a href = "<?php $_SERVER ['PHP_SELF']?>?del=<?php echo $employee1['email']?>" 
+                                    
+                               class = "btn btn-sm btn-danger">Delete</a>
+                        </td>
+
+                        <!--<td>
+                            <a  class= "btn btn-sm btn-warning"
+                                href = "update.php?upd=<?php echo $employee1['email']?>">Update</a>
+                        </td>-->
+
+                    <tr>
+                    <?php
+                }
+            }
+        ?>
+    </tbody>
+    </table>
+   
+
+    <hr>
+    <h3>Employee Details</h3>
+    <hr>
+    
+<!-- Employee detail form -->
+<form action="" name="Formfill">
+                <h2>Register</h2>
+                <div class="input-box">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="Username" placeholder="Username">
+                </div>
+                <div class="input-box">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" name="E-mail" placeholder="E-mail">
+                </div>
+                <div class="input-box">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="Password" placeholder="Password">
+                </div>
+                <div class="input-box">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="cPassword" placeholder="Confirm Password">
+                </div>
+                <div class="button">
+                    <input type="submit" class="btn" value="Register">
+                </div>
+                <div class="group">
+                    <span><a href="#">Forget Password</a></span>
+                    <span><a href="#">Login</a></span>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    </div>
+    <script src="https://kit.fontawesome.com/c0efc8f4b6.js" crossorigin="anonymous"></script>
+</body>
+</html>
